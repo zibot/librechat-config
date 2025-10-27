@@ -1,0 +1,161 @@
+# Configuration version (required)
+version: 1.2.1
+
+# Cache settings: Set to true to enable caching
+cache: true
+
+# Granular file storage strategies (new format - recommended)
+# Allows different storage strategies for different file types
+fileStrategy:
+   avatar: "s3"        # Storage for user/agent avatar images
+   image: "s3"   # Storage for uploaded images in chats
+   document: "s3"   # Storage for document uploads (PDFs, text files, etc.)
+
+
+# Custom interface configuration
+interface:
+  customWelcome: 'Welcome to LibreChat! Enjoy your experience.'
+  # Enable/disable file search as a chatarea selection (default: true)
+  # Note: This setting does not disable the Agents File Search Capability.
+  # To disable the Agents Capability, see the Agents Endpoint configuration instead.
+  fileSearch: true
+  # Privacy policy settings
+  privacyPolicy:
+    #externalUrl: 'https://librechat.ai/privacy-policy'
+    externalUrl: ''
+    openNewTab: true
+
+  # Terms of service
+  termsOfService:
+    #externalUrl: 'https://librechat.ai/tos'
+    externalUrl: ''
+    openNewTab: true
+
+  endpointsMenu: true
+  modelSelect: true
+  parameters: true
+  sidePanel: true
+  presets: true
+  prompts: true
+  bookmarks: true
+  multiConvo: true
+  agents: true
+  peoplePicker:
+    users: true
+    groups: true
+    roles: true
+  marketplace:
+      use: false
+  fileCitations: true
+  # Temporary chat retention period in hours (default: 720, min: 1, max: 8760)
+  temporaryChatRetention: 720
+
+# Registration Object Structure (optional)
+registration:
+  socialLogins: []
+  allowedDomains: []
+
+# Balance settings
+balance:
+  enabled: false
+#  startBalance: 20000
+#  autoRefillEnabled: false
+#   refillIntervalValue: 30
+#   refillIntervalUnit: 'days'
+#   refillAmount: 10000
+
+# rateLimits:
+fileUploads:
+  ipMax: 100
+  ipWindowInMinutes: 60  # Rate limit window for file uploads per IP
+  userMax: 50
+  userWindowInMinutes: 60  # Rate limit window for file uploads per user
+conversationsImport:
+  ipMax: 100
+  ipWindowInMinutes: 60  # Rate limit window for conversation imports per IP
+  userMax: 50
+  userWindowInMinutes: 60  # Rate limit window for conversation imports per user
+
+# Actions Object Structure
+# actions:
+#   allowedDomains:
+#     - 'swapi.dev'
+#     - 'librechat.ai'
+#     - 'google.com'
+
+
+endpoints:
+  custom:
+    # - name: "OpenAI"
+    #   apiKey: "${OPENAI_API_KEY}"
+    #   baseURL: "https://api.openai.com/v1"
+    #   models:
+    #     default: ["gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo"]
+    #     fetch: false
+    #   titleConvo: true
+    #   titleModel: "gpt-3.5-turbo"
+    #   summarize: false
+    #   summaryModel: "gpt-3.5-turbo"
+    #   forcePrompt: false
+    #   modelDisplayLabel: "OpenAI"
+    #   addParams:
+    #     max_tokens: 4000
+    #     temperature: 0.7
+
+    # - name: "Anthropic"
+    #   apiKey: "${ANTHROPIC_API_KEY}"
+    #   baseURL: "https://api.anthropic.com/v1"
+    #   models:
+    #     default: ["claude-sonnet-4-5-20250929", "claude-opus-4-20250514"]
+    #     fetch: false
+    #   titleConvo: true
+    #   titleModel: "claude-sonnet-4-5-20250929"
+    #   modelDisplayLabel: "Anthropic"
+    #   addParams:
+    #     max_tokens: 4096
+    - name: "Deepseek"
+      apiKey: "${DEEPSEEK_API_KEY}"
+      baseURL: "https://api.deepseek.com/v1"
+      models:
+        default: ["deepseek-chat", "deepseek-coder", "deepseek-reasoner"]
+        fetch: false
+      titleConvo: true
+      titleModel: "deepseek-chat"
+      modelDisplayLabel: "Deepseek"
+
+fileConfig:
+  endpoints:
+    assistants:
+      fileLimit: 5
+      fileSizeLimit: 10
+      totalSizeLimit: 50
+      supportedMimeTypes:
+        - "image/.*"
+        - "application/pdf"
+    openAI:
+      disabled: false
+      fileLimit: 5
+      fileSizeLimit: 10
+      totalSizeLimit: 50
+      supportedMimeTypes:
+        - "image/.*"
+        - "application/pdf"
+    default:
+      totalSizeLimit: 20
+      supportedMimeTypes:
+        - "image/.*"
+
+  serverFileSizeLimit: 100
+  avatarSizeLimit: 2
+
+rateLimits:
+  fileUploads:
+    ipMax: 100
+    ipWindowInMinutes: 60
+    userMax: 50
+    userWindowInMinutes: 60
+  conversationsImport:
+    ipMax: 100
+    ipWindowInMinutes: 60
+    userMax: 50
+    userWindowInMinutes: 60
