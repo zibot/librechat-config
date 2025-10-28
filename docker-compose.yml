@@ -38,7 +38,7 @@ services:
     environment:
       << : *x-env-apikeys      
       HOST: ${HOST:-0.0.0.0}
-      MONGO_URI: mongodb://${MONGO_USERNAME:-librechat}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT:-}/${MONGO_DBNAME:-librechat}?authSource=admin&directConnection=true
+      MONGO_URI: mongodb://${MONGO_USERNAME:-librechat}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT:-27017}/${MONGO_DBNAME:-librechat}?authSource=admin&directConnection=true
       MEILI_HOST: ${MEILI_HOST:-http://meilisearch:7700}
       MEILI_MASTER_KEY: *x-env-meili-master-key
       RAG_PORT: ${RAG_PORT:-8000}
