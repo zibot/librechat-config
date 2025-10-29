@@ -113,15 +113,15 @@ endpoints:
     #   modelDisplayLabel: "Anthropic"
     #   addParams:
     #     max_tokens: 4096
-    - name: "Deepseek"
-      apiKey: "${DEEPSEEK_API_KEY}"
-      baseURL: "https://api.deepseek.com/v1"
+    - name: "Timeweb Deepseek Reasoner"
+      apiKey: "${TIMEWEB_DEEPSEEK_API_KEY}"
+      baseURL: "https://agent.timeweb.cloud/api/v1/cloud-ai/agents/05dbe06f-d8f8-44aa-ae4a-7cccd0bf0dfd/v1"
       models:
-        default: ["deepseek-chat", "deepseek-coder", "deepseek-reasoner"]
+        default: ["deepseek-reasoner"]
         fetch: false
       titleConvo: true
       titleModel: "deepseek-chat"
-      modelDisplayLabel: "Deepseek"
+      modelDisplayLabel: "Timeweb Deepseek Reasoner"
 
 fileConfig:
   endpoints:

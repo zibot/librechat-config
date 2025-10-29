@@ -5,7 +5,7 @@ x-env-vectordb: &x-env-vectordb
   POSTGRES_USER: ${POSTGRES_USER:-librechat}
   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 x-env-apikeys: &x-env-apikeys
-  OPENAI_API_KEY: ${OPENAI_API_KEY:-user_provided}
+  #OPENAI_API_KEY: ${OPENAI_API_KEY:-user_provided}
   #ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
   #GOOGLE_KEY: ${GOOGLE_API_KEY:-user_provided}
   #BINGAI_TOKEN: ${BINGAI_TOKEN:-user_provided}
@@ -15,7 +15,7 @@ x-env-apikeys: &x-env-apikeys
   #PERPLEXITY_API_KEY: ${PERPLEXITY_API_KEY:-user_provided}
   #ANYSCALE_API_KEY: ${ANYSCALE_API_KEY:-user_provided}
   #TOGETHERAI_API_KEY: ${TOGETHERAI_API_KEY:-user_provided}
-  DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+  #DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-user_provided}
   _ : _
 
 services:
