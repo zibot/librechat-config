@@ -231,10 +231,10 @@ volumes:
 networks:
   # Frontend сеть - для доступа извне
   frontend:
-    name: librechat_frontend
+    name: frontend
     driver: bridge
     driver_opts:
-      com.docker.network.bridge.name: librechat-frontend
+      com.docker.network.bridge.name: frontend
     ipam:
       driver: default
       config:
@@ -243,11 +243,11 @@ networks:
     
   # Backend сеть - внутренняя изолированная сеть
   backend:
-    name: librechat_backend
+    name: backend
     driver: bridge
     internal: true  # НЕТ доступа к внешнему интернету
     driver_opts:
-      com.docker.network.bridge.name: librechat-backend
+      com.docker.network.bridge.name: backend
     ipam:
       driver: default
       config:
