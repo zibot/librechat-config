@@ -36,6 +36,15 @@ fileConfig:
         - "image/.*"
         - "application/pdf"
     
+    openAI:
+      disabled: false
+      fileLimit: 5
+      fileSizeLimit: 10
+      totalSizeLimit: 50
+      supportedMimeTypes:
+        - "image/.*"
+        - "application/pdf"
+    
     default:
       totalSizeLimit: 20
       supportedMimeTypes:
