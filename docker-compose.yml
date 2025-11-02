@@ -4,14 +4,12 @@
 
 x-env-scalars:
   - &x-env-meili-master-key ${MEILI_MASTER_KEY}
-
 # Vector database environment variables
 x-env-vectordb: &x-env-vectordb
   POSTGRES_DB: ${POSTGRES_DB:-librechat}
   POSTGRES_USER: ${POSTGRES_USER:-librechat}
   PGUSER: ${POSTGRES_USER:-librechat}
   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-
 # AI API keys configuration (most providers disabled)
 x-env-apikeys: &x-env-apikeys
   # OpenAI and other providers (commented out)
@@ -35,19 +33,13 @@ x-env-apikeys: &x-env-apikeys
 # ========================================
 # Services Configuration
 # ========================================
-
 services:
-  # =====================================
-  # Main LibreChat API Service
-  # =====================================
   api:
     container_name: api
     image: ghcr.io/danny-avila/librechat-dev:latest
     ports:
       - "${PORT:-3080}:${PORT:-3080}"
     restart: always
-    
-    # Service dependencies
     depends_on:
       meilisearch:
         condition: service_healthy
@@ -55,42 +47,22 @@ services:
         condition: service_healthy
       rag-api:
         condition: service_started
-    
-    # Network configuration - API в обеих сетях
-    networks:
-      - frontend
-      - backend
-    
-    # Environment variables
     environment:
       << : *x-env-apikeys
-      # Server settings
       HOST: "${HOST:-localhost}"
       DOMAIN_CLIENT: ${DOMAIN_CLIENT}
       DOMAIN_SERVER: ${DOMAIN_SERVER}
-      
-      # Database connections
       MONGO_URI: "mongodb://${MONGO_USERNAME:-librechat}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT:-27017}/${MONGO_DBNAME:-librechat}?authSource=admin&directConnection=true"
-      
-      # Search service
       MEILI_HOST: "${MEILI_HOST:-http://meilisearch}:${MEILI_PORT:-7700}"
       MEILI_MASTER_KEY: *x-env-meili-master-key
       SEARCH: 'true'
-      
-      # RAG API
       RAG_PORT: "${RAG_PORT:-8000}"
       RAG_API_URL: "http://rag-api:${RAG_PORT:-8000}"
-      
-      # Security
       JWT_SECRET: ${JWT_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       CREDS_KEY: ${CREDS_KEY}
       CREDS_IV: ${CREDS_IV}
-      
-      # Configuration
       CONFIG_PATH: /config/librechat.yaml
-    
-    # Volume mounts
     volumes:
       - type: bind
         source: ./.env
@@ -99,8 +71,6 @@ services:
       - 'librechat-uploads:/app/uploads'
       - 'librechat-logs:/app/api/logs'
       - 'librechat-config:/app/custom/config'
-    
-    # Health monitoring
     healthcheck:
       test:
         - CMD
@@ -112,32 +82,20 @@ services:
       interval: 5s
       timeout: 10s
       retries: 3
-    
-    # Post-start admin user creation
     post_start:
       - command:
         - "npm run create-user \"${ADMIN_EMAIL}\" \"${ADMIN_NAME}\" \"${ADMIN_USERNAME}\" \"${ADMIN_PASSWORD}\" -- --email-verified=True 2>&1 | /app/logs/create-user-output.log"
 
-  # =====================================
-  # MeiliSearch Service (Full-text Search)
-  # =====================================
   meilisearch:
     container_name: meilisearch
     image: "getmeili/meilisearch:latest"
     restart: always
-    
-    # Только backend сеть - изолирован от внешнего мира
-    networks:
-      - backend
-    
     environment:
       MEILI_ENV: production
       MEILI_NO_ANALYTICS: ${MEILI_NO_ANALYTICS:-true}
       MEILI_MASTER_KEY: *x-env-meili-master-key
-    
     volumes:
       - "meilisearch-data:/meili_data"
-    
     healthcheck:
       test:
         - CMD
@@ -148,25 +106,14 @@ services:
       timeout: 10s
       retries: 15
 
-  # =====================================
-  # PostgreSQL Vector Database
-  # =====================================
   vectordb:
     container_name: vectordb
     image: ankane/pgvector:latest
     restart: always
-    #user: ${UID:-1000}:${GID:-1000}
-    
-    # Только backend сеть - изолирован от внешнего мира
-    networks:
-      - backend
-    
     environment:
       << : *x-env-vectordb
-    
     volumes:
       - vectordb-data:/var/lib/postgresql/data
-    
     healthcheck:
       test:
         - CMD
@@ -178,27 +125,17 @@ services:
       retries: 5
       start_period: 10s
 
-  # =====================================
-  # RAG API Service (Retrieval-Augmented Generation)
-  # =====================================
   rag-api:
     container_name: rag-api
     image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:latest
     restart: always
-    
-    # Только backend сеть - изолирован от внешнего мира
-    networks:
-      - backend
-    
     environment:
       << : [*x-env-vectordb, *x-env-apikeys]
       DB_HOST: vectordb
       RAG_PORT: ${RAG_PORT:-8000}
-    
     depends_on:
       vectordb:
         condition: service_healthy
-    
     healthcheck:
       test:
         - CMD
@@ -209,48 +146,16 @@ services:
       timeout: 20s
       retries: 10
 
-# ========================================
-# Persistent Data Volumes
-# ========================================
 volumes:
   meilisearch-data:
-    name: librechat_meilisearch_data
+    name: meilisearch_data
   vectordb-data:
-    name: librechat_vectordb_data
+    name: vectordb_data
   librechat-images:
-    name: librechat_images
+    name: images
   librechat-logs:
-    name: librechat_logs
+    name: logs
   librechat-uploads:
-    name: librechat_uploads
+    name: uploads
   librechat-config:
-    name: librechat_config
-
-# ========================================
-# Network Security Configuration
-# ========================================
-networks:
-  # Frontend сеть - для доступа извне
-  frontend:
-    name: frontend
-    driver: bridge
-    driver_opts:
-      com.docker.network.bridge.name: frontend
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.20.0.0/16
-          gateway: 172.20.0.1
-    
-  # Backend сеть - внутренняя изолированная сеть
-  backend:
-    name: backend
-    driver: bridge
-    internal: true  # НЕТ доступа к внешнему интернету
-    driver_opts:
-      com.docker.network.bridge.name: backend
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.21.0.0/16
-          gateway: 172.21.0.1
+    name: config
