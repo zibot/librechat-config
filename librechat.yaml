@@ -36,15 +36,6 @@ fileConfig:
         - "image/.*"
         - "application/pdf"
     
-    openAI:
-      disabled: false
-      fileLimit: 5
-      fileSizeLimit: 10
-      totalSizeLimit: 50
-      supportedMimeTypes:
-        - "image/.*"
-        - "application/pdf"
-    
     default:
       totalSizeLimit: 20
       supportedMimeTypes:
@@ -146,8 +137,8 @@ endpoints:
         fetch: false
       
       # Conversation features
-      titleConvo: true             # Enable conversation titles
-      titleModel: "deepseek-reasoner"  # Model for generating titles
+      titleConvo: true                  # Enable conversation titles
+      titleModel: "deepseek-reasoner"   # Model for generating titles
     
     # ==========================================
     # Other Providers (Disabled)
@@ -182,13 +173,3 @@ endpoints:
     #   addParams:
     #     max_tokens: 4096
 
-# ================================================
-# Security & Actions (Optional)
-# ================================================
-# Uncomment to enable action restrictions
-# actions:
-#   allowedDomains:
-#     - 'api.tavily.com'
-#     - 'serpapi.com'
-#     - 'wikipedia.org'
-#     - 'github.com'
