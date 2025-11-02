@@ -60,15 +60,11 @@ services:
       - frontend
       - backend
     
-    # Network configuration
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    
     # Environment variables
     environment:
       << : *x-env-apikeys
       # Server settings
-      HOST: "${HOST:-0.0.0.0}"
+      HOST: "${HOST:-localhost}"
       DOMAIN_CLIENT: ${DOMAIN_CLIENT}
       DOMAIN_SERVER: ${DOMAIN_SERVER}
       
@@ -128,7 +124,6 @@ services:
     container_name: meilisearch
     image: "getmeili/meilisearch:latest"
     restart: always
-    #user: ${UID:-1000}:${GID:-1000}
     
     # Только backend сеть - изолирован от внешнего мира
     networks:
@@ -189,7 +184,6 @@ services:
     container_name: rag-api
     image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:latest
     restart: always
-    #user: ${UID:-1000}:${GID:-1000}
     
     # Только backend сеть - изолирован от внешнего мира
     networks:
