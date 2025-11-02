@@ -1,137 +1,41 @@
+# ================================================
+# LibreChat Configuration File
+# ================================================
 # Configuration version (required)
 version: 1.2.1
 
-# Cache settings: Set to true to enable caching
+# ================================================
+# Performance & Caching
+# ================================================
+# Enable caching for better performance
 cache: true
 
-# Granular file storage strategies (new format - recommended)
-# Allows different storage strategies for different file types
+# ================================================
+# File Storage Configuration
+# ================================================
+# Granular file storage strategies using S3
 fileStrategy:
-   avatar: "s3"        # Storage for user/agent avatar images
-   image: "s3"   # Storage for uploaded images in chats
-   document: "s3"   # Storage for document uploads (PDFs, text files, etc.)
+  avatar: "s3"      # User/agent avatar images
+  image: "s3"       # Chat uploaded images
+  document: "s3"    # Document uploads (PDFs, text files, etc.)
 
-
-# Custom interface configuration
-interface:
-  customWelcome: 'Welcome to LibreChat! Enjoy your experience.'
-  # Enable/disable file search as a chatarea selection (default: true)
-  # Note: This setting does not disable the Agents File Search Capability.
-  # To disable the Agents Capability, see the Agents Endpoint configuration instead.
-  fileSearch: true
-  # Privacy policy settings
-  privacyPolicy:
-    #externalUrl: 'https://librechat.ai/privacy-policy'
-    externalUrl: ''
-    openNewTab: true
-
-  # Terms of service
-  termsOfService:
-    #externalUrl: 'https://librechat.ai/tos'
-    externalUrl: ''
-    openNewTab: true
-
-  endpointsMenu: true
-  modelSelect: true
-  parameters: true
-  sidePanel: true
-  presets: true
-  prompts: true
-  bookmarks: true
-  multiConvo: true
-  agents: true
-  peoplePicker:
-    users: true
-    groups: true
-    roles: true
-  marketplace:
-      use: false
-  fileCitations: true
-  # Temporary chat retention period in hours (default: 720, min: 1, max: 8760)
-  temporaryChatRetention: 720
-
-# Registration Object Structure (optional)
-registration:
-  socialLogins: []
-  allowedDomains: []
-
-# Balance settings
-balance:
-  enabled: false
-#  startBalance: 20000
-#  autoRefillEnabled: false
-#   refillIntervalValue: 30
-#   refillIntervalUnit: 'days'
-#   refillAmount: 10000
-
-# rateLimits:
-fileUploads:
-  ipMax: 100
-  ipWindowInMinutes: 60  # Rate limit window for file uploads per IP
-  userMax: 50
-  userWindowInMinutes: 60  # Rate limit window for file uploads per user
-conversationsImport:
-  ipMax: 100
-  ipWindowInMinutes: 60  # Rate limit window for conversation imports per IP
-  userMax: 50
-  userWindowInMinutes: 60  # Rate limit window for conversation imports per user
-
-# Actions Object Structure
-# actions:
-#   allowedDomains:
-#     - 'swapi.dev'
-#     - 'librechat.ai'
-#     - 'google.com'
-
-
-endpoints:
-  custom:
-    # - name: "OpenAI"
-    #   apiKey: "${OPENAI_API_KEY}"
-    #   baseURL: "https://api.openai.com/v1"
-    #   models:
-    #     default: ["gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo"]
-    #     fetch: false
-    #   titleConvo: true
-    #   titleModel: "gpt-3.5-turbo"
-    #   summarize: false
-    #   summaryModel: "gpt-3.5-turbo"
-    #   forcePrompt: false
-    #   modelDisplayLabel: "OpenAI"
-    #   addParams:
-    #     max_tokens: 4000
-    #     temperature: 0.7
-
-    # - name: "Anthropic"
-    #   apiKey: "${ANTHROPIC_API_KEY}"
-    #   baseURL: "https://api.anthropic.com/v1"
-    #   models:
-    #     default: ["claude-sonnet-4-5-20250929", "claude-opus-4-20250514"]
-    #     fetch: false
-    #   titleConvo: true
-    #   titleModel: "claude-sonnet-4-5-20250929"
-    #   modelDisplayLabel: "Anthropic"
-    #   addParams:
-    #     max_tokens: 4096
-    - name: "Timeweb Deepseek Reasoner"
-      apiKey: "${TIMEWEB_DEEPSEEK_API_KEY}"
-      baseURL: "https://agent.timeweb.cloud/api/v1/cloud-ai/agents/05dbe06f-d8f8-44aa-ae4a-7cccd0bf0dfd/v1"
-      models:
-        default: ["deepseek-reasoner"]
-        fetch: false
-      titleConvo: true
-      titleModel: "deepseek-chat"
-      modelDisplayLabel: "Timeweb Deepseek Reasoner"
-
+# File upload limits and restrictions
 fileConfig:
+  # Global server file size limit (MB)
+  serverFileSizeLimit: 100
+  # Avatar file size limit (MB)
+  avatarSizeLimit: 2
+  
+  # Endpoint-specific file configurations
   endpoints:
     assistants:
-      fileLimit: 5
-      fileSizeLimit: 10
-      totalSizeLimit: 50
+      fileLimit: 5                    # Max files per upload
+      fileSizeLimit: 10              # Size limit per file (MB)
+      totalSizeLimit: 50             # Total size limit (MB)
       supportedMimeTypes:
         - "image/.*"
         - "application/pdf"
+    
     openAI:
       disabled: false
       fileLimit: 5
@@ -140,22 +44,151 @@ fileConfig:
       supportedMimeTypes:
         - "image/.*"
         - "application/pdf"
+    
     default:
       totalSizeLimit: 20
       supportedMimeTypes:
         - "image/.*"
 
-  serverFileSizeLimit: 100
-  avatarSizeLimit: 2
+# ================================================
+# User Interface Configuration
+# ================================================
+interface:
+  # Welcome message
+  customWelcome: 'Welcome to LibreChat! Enjoy your experience.'
+  
+  # Feature toggles
+  fileSearch: true          # Enable file search in chat area
+  endpointsMenu: true       # Show endpoints menu
+  modelSelect: true         # Allow model selection
+  parameters: true          # Show model parameters
+  sidePanel: true          # Enable side panel
+  presets: true            # Enable conversation presets
+  prompts: true            # Enable prompt templates
+  bookmarks: true          # Enable bookmarks
+  multiConvo: true         # Enable multiple conversations
+  agents: true             # Enable AI agents
+  fileCitations: true      # Show file citations
+  
+  # Social features
+  peoplePicker:
+    users: true            # Enable user picker
+    groups: true           # Enable group picker
+    roles: true            # Enable role picker
+  
+  # Marketplace settings
+  marketplace:
+    use: false             # Disable marketplace
+  
+  # Data retention
+  temporaryChatRetention: 720  # Hours (default: 720, min: 1, max: 8760)
+  
+  # Legal pages
+  privacyPolicy:
+    externalUrl: ''        # Privacy policy URL (empty = disabled)
+    openNewTab: true
+  
+  termsOfService:
+    externalUrl: ''        # Terms of service URL (empty = disabled)
+    openNewTab: true
 
+# ================================================
+# User Management
+# ================================================
+# Registration settings
+registration:
+  socialLogins: []         # No social login providers
+  allowedDomains: []       # No domain restrictions
+
+# User balance system (disabled)
+balance:
+  enabled: false
+  # startBalance: 20000
+  # autoRefillEnabled: false
+  # refillIntervalValue: 30
+  # refillIntervalUnit: 'days'
+  # refillAmount: 10000
+
+# ================================================
+# Rate Limiting
+# ================================================
 rateLimits:
+  # File upload limits
   fileUploads:
-    ipMax: 100
-    ipWindowInMinutes: 60
-    userMax: 50
-    userWindowInMinutes: 60
+    ipMax: 100                    # Max uploads per IP
+    ipWindowInMinutes: 60         # Time window for IP limits
+    userMax: 50                   # Max uploads per user
+    userWindowInMinutes: 60       # Time window for user limits
+  
+  # Conversation import limits
   conversationsImport:
-    ipMax: 100
-    ipWindowInMinutes: 60
-    userMax: 50
-    userWindowInMinutes: 60
+    ipMax: 100                    # Max imports per IP
+    ipWindowInMinutes: 60         # Time window for IP limits
+    userMax: 50                   # Max imports per user
+    userWindowInMinutes: 60       # Time window for user limits
+
+# ================================================
+# AI Endpoints Configuration
+# ================================================
+endpoints:
+  custom:
+    # ==========================================
+    # Timeweb Deepseek Reasoner
+    # ==========================================
+    - name: "Timeweb Deepseek Reasoner"
+      apiKey: "${TIMEWEB_DEEPSEEK_API_KEY}"
+      baseURL: "https://agent.timeweb.cloud/api/v1/cloud-ai/agents/05dbe06f-d8f8-44aa-ae4a-7cccd0bf0dfd/v1"
+      modelDisplayLabel: "Timeweb Deepseek Reasoner"
+      
+      # Available models
+      models:
+        default: ["deepseek-reasoner"]
+        fetch: false
+      
+      # Conversation features
+      titleConvo: true             # Enable conversation titles
+      titleModel: "deepseek-reasoner"  # Model for generating titles
+    
+    # ==========================================
+    # Other Providers (Disabled)
+    # ==========================================
+    # Uncomment and configure as needed
+    
+    # - name: "OpenAI"
+    #   apiKey: "${OPENAI_API_KEY}"
+    #   baseURL: "https://api.openai.com/v1"
+    #   modelDisplayLabel: "OpenAI"
+    #   models:
+    #     default: ["gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo"]
+    #     fetch: false
+    #   titleConvo: true
+    #   titleModel: "gpt-3.5-turbo"
+    #   summarize: false
+    #   summaryModel: "gpt-3.5-turbo"
+    #   forcePrompt: false
+    #   addParams:
+    #     max_tokens: 4000
+    #     temperature: 0.7
+
+    # - name: "Anthropic"
+    #   apiKey: "${ANTHROPIC_API_KEY}"
+    #   baseURL: "https://api.anthropic.com/v1"
+    #   modelDisplayLabel: "Anthropic"
+    #   models:
+    #     default: ["claude-sonnet-4-5-20250929", "claude-opus-4-20250514"]
+    #     fetch: false
+    #   titleConvo: true
+    #   titleModel: "claude-sonnet-4-5-20250529"
+    #   addParams:
+    #     max_tokens: 4096
+
+# ================================================
+# Security & Actions (Optional)
+# ================================================
+# Uncomment to enable action restrictions
+# actions:
+#   allowedDomains:
+#     - 'api.tavily.com'
+#     - 'serpapi.com'
+#     - 'wikipedia.org'
+#     - 'github.com'
