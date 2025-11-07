@@ -62,15 +62,12 @@ services:
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       CREDS_KEY: ${CREDS_KEY}
       CREDS_IV: ${CREDS_IV}
-      CONFIG_PATH: /config/librechat.yaml
     volumes:
-      - type: bind
-        source: ./.env
-        target: /app/.env
-      - 'librechat-images:/app/client/public/images'
-      - 'librechat-uploads:/app/uploads'
-      - 'librechat-logs:/app/api/logs'
-      - 'librechat-config:/app/custom/config'
+      - ./.env:/app/.env
+      - ./data/images:/app/client/public/images
+      - ./data/uploads:/app/uploads
+      - ./data/logs:/app/api/logs
+
     healthcheck:
       test:
         - CMD
@@ -127,7 +124,7 @@ services:
 
   rag-api:
     container_name: rag-api
-    image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:latest
+    image: ghcr.io/danny-avila/librechat-rag-api-dev:latest
     restart: always
     environment:
       << : [*x-env-vectordb, *x-env-apikeys]
@@ -148,14 +145,4 @@ services:
 
 volumes:
   meilisearch-data:
-    name: meilisearch_data
   vectordb-data:
-    name: vectordb_data
-  librechat-images:
-    name: images
-  librechat-logs:
-    name: logs
-  librechat-uploads:
-    name: uploads
-  librechat-config:
-    name: config
